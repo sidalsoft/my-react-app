@@ -4,7 +4,7 @@ import './Tags.css'
 function Tags({tags}) {
     return (
         <>
-            теги: {tags && tags.map(o => <button key={o}>#{o}</button>)}
+            теги: {tags && tags.map(o => <button id="tag" key={o}>#{o}</button>)}
         </>
     );
 }

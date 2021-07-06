@@ -8,13 +8,14 @@ function Wall() {
             author: {
                 id: 1,
                 avatar: 'https:lms.openjs.io/logo_js.svg',
-                name: 'OpenJs'
+                name: 'OpenJS'
             },
             content: 'Ну какб вы спраились с домашкой?',
             photo: null,
             hit: true,
             likes: 222,
             likedByMe: true,
+            hidden: true,
             tags: null,
             created: 1603501200
         },
@@ -23,7 +24,7 @@ function Wall() {
             author: {
                 id: 1,
                 avatar: 'https:lms.openjs.io/logo_js.svg',
-                name: 'OpenJs'
+                name: 'OpenJS'
             },
             content: null,
             photo: {
@@ -31,6 +32,7 @@ function Wall() {
                 alt: 'openjs logo'
             },
             hit: true,
+            hidden: false,
             likes: 1000,
             likedByMe: true,
             tags: ['deadline', 'homework'],
@@ -38,6 +40,9 @@ function Wall() {
         }
     ])
 
+    const handlePostRemove = (id) => {
+        setPosts((prevState) => prevState.filter(o => o.id !== id))
+    }
     const handlePostLike = (id) => {
         setPosts((prevState) => prevState.map(o => {
             if (o.id !== id) {
@@ -48,13 +53,21 @@ function Wall() {
             return {...o, likedByMe, likes}
         }))
     }
-    const handlePostRemove = (id) => {
-        setPosts((prevState) => prevState.filter(o => o.id !== id))
+
+    const handlePostHide = (id) => {
+        setPosts((prevState) => prevState.map(o => {
+            if (o.id !== id) {
+                return o;
+            }
+            const hidden = !o.hidden
+            return {...o, hidden}
+        }))
     }
 
     return (
         <div>
-            {posts.map(o => <Post key={o.id} post={o} onLike={handlePostLike} onRemove={handlePostRemove}/>)}
+            {posts.map(o => <Post key={o.id} post={o} onLike={handlePostLike} onRemove={handlePostRemove}
+                                  onHide={handlePostHide}/>)}
         </div>
     );
 }
