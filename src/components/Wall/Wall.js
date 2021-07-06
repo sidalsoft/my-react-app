@@ -88,9 +88,14 @@ function Wall() {
         setPosts((prevState) => [{...post}, ...prevState,])
         setEdited(undefined);
     }
+
+    const handleCancel = () => {
+        setEdited(undefined)
+    }
+
     return (
         <>
-            <PostForm edited={edited} onSave={handlePostSave}/>
+            <PostForm edited={edited} onSave={handlePostSave} onCancel={handleCancel}/>
 
             <div>
                 {posts.map(o => <Post

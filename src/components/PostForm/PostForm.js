@@ -20,7 +20,7 @@ const empty = {
     created: 1603771200
 }
 
-function PostForm({edited = empty, onSave}) {
+function PostForm({edited = empty, onSave, onCancel}) {
 
     const [post, setPost] = useState({
         id: Date.now(),
@@ -50,12 +50,18 @@ function PostForm({edited = empty, onSave}) {
         onSave({
             ...post,
             id: post.id || Date.now(),
-            created: Date.now(),
+            created: post.id ? post.created : Date.now(),
             tags,
             photo: post.photo?.url ? {alt: '', ...post.photo} : null
         })
         setPost(empty)
         firstFocusEL.current.focus();
+    }
+
+    const handleCancel = (evt) => {
+        evt.preventDefault()
+        setPost(empty)
+        onCancel()
     }
 
     const handleChange = (evt) => {
@@ -95,6 +101,7 @@ function PostForm({edited = empty, onSave}) {
                    placeholder="alt"
                    value={post.photo?.alt || ''}
                    onChange={handleChange}/>
+            {!!post.id && <button name="Отменить" onClick={handleCancel} value="Отменить">Отменить</button>}
             <button>Ok</button>
         </form>
     );
