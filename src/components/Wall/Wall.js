@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import Post from "../Post/Post";
+import PostForm from "../PostForm/PostForm";
 
 function Wall() {
     const [posts, setPosts] = useState([
@@ -39,10 +40,12 @@ function Wall() {
             created: 1603501200
         }
     ])
+    const [edited, setEdited] = useState()
 
     const handlePostRemove = (id) => {
         setPosts((prevState) => prevState.filter(o => o.id !== id))
     }
+
     const handlePostLike = (id) => {
         setPosts((prevState) => prevState.map(o => {
             if (o.id !== id) {
@@ -63,12 +66,42 @@ function Wall() {
             return {...o, hidden}
         }))
     }
+    const handlePostEdit = (id) => {
+        const post = posts.find(o => o.id === id);
+        if (post === undefined) {
+            return;
+        }
+        setEdited(post)
+    }
 
+    const handlePostSave = (post) => {
+        if (edited !== undefined) {
+            setPosts((prevState) => prevState.map((o) => {
+                if (o.id !== post.id) {
+                    return o
+                }
+                return {...post}
+            }))
+            setEdited(undefined);
+            return;
+        }
+        setPosts((prevState) => [{...post}, ...prevState,])
+        setEdited(undefined);
+    }
     return (
-        <div>
-            {posts.map(o => <Post key={o.id} post={o} onLike={handlePostLike} onRemove={handlePostRemove}
-                                  onHide={handlePostHide}/>)}
-        </div>
+        <>
+            <PostForm edited={edited} onSave={handlePostSave}/>
+
+            <div>
+                {posts.map(o => <Post
+                    key={o.id}
+                    post={o}
+                    onLike={handlePostLike}
+                    onRemove={handlePostRemove}
+                    onHide={handlePostHide}
+                    onEdit={handlePostEdit}/>)}
+            </div>
+        </>
     );
 }
 

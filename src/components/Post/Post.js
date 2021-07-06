@@ -2,7 +2,7 @@ import React from 'react';
 import './Post.css'
 import Tags from "../Tags/Tags";
 
-function Post({post, onLike, onRemove, onHide}) {
+function Post({post, onLike, onRemove, onHide, onEdit}) {
     const {author} = post;
     const {photo} = post;
 
@@ -17,6 +17,9 @@ function Post({post, onLike, onRemove, onHide}) {
     const handleHide = (evt) => {
         onHide(post.id)
     }
+    const handleEdit = () => {
+        onEdit(post.id)
+    }
 
     return (
         <article>
@@ -25,6 +28,7 @@ function Post({post, onLike, onRemove, onHide}) {
                 <h5>{author.name}</h5>
                 <button onClick={handleHide}>{post.hidden ? 'скрыть' : 'показать'}</button>
                 {post.hidden && <button onClick={handleRemoveClick}>удалить</button>}
+                {post.hidden && <button onClick={handleEdit}>изменить</button>}
                 {post.hidden && <div>{post.created}</div>}
                 {post.hidden && post.hit && <span>HIT</span>}
             </header>
