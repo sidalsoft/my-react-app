@@ -8,7 +8,10 @@ const empty = {
         name: 'OpenJS'
     },
     content: '',
-    photo: null,
+    photo: {
+        url: '',
+        alt: ''
+    },
     hit: false,
     likes: 0,
     likedByMe: false,
@@ -62,6 +65,14 @@ function PostForm({edited = empty, onSave}) {
             setPost((prevState) => ({...prevState, [name]: parsed}))
             return;
         }
+        if ('photo' === name) {
+            setPost((prevState) => ({...prevState, photo: {url: value, alt: post.photo?.alt}}))
+            return;
+        }
+        if ('alt' === name) {
+            setPost((prevState) => ({...prevState, photo: {url: post.photo?.url, alt: value}}))
+            return;
+        }
         setPost((prevState) => ({...prevState, [name]: value}))
     }
 
@@ -75,6 +86,14 @@ function PostForm({edited = empty, onSave}) {
             <input name="tags"
                    placeholder="tags"
                    value={post.tags?.join(' ') || ''}
+                   onChange={handleChange}/>
+            <input name="photo"
+                   placeholder="photo"
+                   value={post.photo?.url || ''}
+                   onChange={handleChange}/>
+            <input name="alt"
+                   placeholder="alt"
+                   value={post.photo?.alt || ''}
                    onChange={handleChange}/>
             <button>Ok</button>
         </form>
