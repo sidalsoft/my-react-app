@@ -25,11 +25,12 @@ const empty = {
     created: 1603771200
 }
 
-export const initialState = {
+const initialState = {
     posts: [],
     edited: empty
 }
-export const reducer = (state, action) => {
+
+export const reducer = (state = initialState, action) => {
     switch (action.type) {
         case POST_EDIT_SUBMIT:
             return reduceSubmit(state, action);
@@ -44,7 +45,7 @@ export const reducer = (state, action) => {
         case POST_HIDE:
             return  reduceHide(state, action);
         case POST_EDIT:
-            return reduceEdit(state, action);;
+            return reduceEdit(state, action);
         default:
             return state;
     }

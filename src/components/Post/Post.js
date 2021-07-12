@@ -1,14 +1,13 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import './Post.css'
 import Tags from "../Tags/Tags";
-import PostsContext from "../../contexts/PostsContext";
 import {edit, hide, like, remove} from "../../store/actions";
+import {useDispatch} from "react-redux";
 
 function Post({post}) {
-    const {author} = post;
-    const {photo} = post;
+    const {author, photo} = post;
 
-    const {dispatch} = useContext(PostsContext);
+    const dispatch = useDispatch();
 
     const handlePostLike = () => {
         // like(post.id)
