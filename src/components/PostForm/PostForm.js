@@ -1,85 +1,31 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useRef} from 'react';
+import PostsContext from "../../contexts/PostsContext";
+import {editCancel, editChange, editSubmit} from "../../store/actions";
 
-const empty = {
-    id: 0,
-    author: {
-        id: 1,
-        avatar: 'https:lms.openjs.io/logo_js.svg',
-        name: 'OpenJS'
-    },
-    content: '',
-    photo: {
-        url: '',
-        alt: ''
-    },
-    hit: false,
-    likes: 0,
-    likedByMe: false,
-    hidden: false,
-    tags: [],
-    created: 1603771200
-}
-
-function PostForm({edited = empty, onSave, onCancel}) {
-
-    const [post, setPost] = useState({
-        id: Date.now(),
-        author: {
-            id: 1,
-            avatar: 'https:lms.openjs.io/logo_js.svg',
-            name: 'OpenJS'
-        },
-        content: '',
-        photo: null,
-        hit: false,
-        likes: 0,
-        likedByMe: false,
-        hidden: false,
-        tags: [],
-        created: Date.now()
-    });
+function PostForm() {
+    const {state: {edited}, dispatch} = useContext(PostsContext)
     const firstFocusEL = useRef(null);
-    useEffect(() => {
-        setPost(edited);
-    }, [edited])
 
     const handleSubmit = (evt) => {
         evt.preventDefault()
-        const parsed = post.tags?.map(o => o.replace('#', '')).filter(o => o.trim() !== '') || [];
-        const tags = parsed.length !== 0 ? parsed : null;
-        onSave({
-            ...post,
-            id: post.id || Date.now(),
-            created: post.id ? post.created : Date.now(),
-            tags,
-            photo: post.photo?.url ? {alt: '', ...post.photo} : null
-        })
-        setPost(empty)
+        // submit()
+        // dispatch({type: 'POST_EDIT_SUBMIT'})
+        dispatch(editSubmit());
         firstFocusEL.current.focus();
     }
 
     const handleCancel = (evt) => {
         evt.preventDefault()
-        setPost(empty)
-        onCancel()
+        // cancel()
+        // dispatch({type: 'POST_EDIT_CANCEL'})
+        dispatch(editCancel());
     }
 
     const handleChange = (evt) => {
         const {name, value} = evt.target
-        if (name === 'tags') {
-            const parsed = value.split(' ');
-            setPost((prevState) => ({...prevState, [name]: parsed}))
-            return;
-        }
-        if ('photo' === name) {
-            setPost((prevState) => ({...prevState, photo: {url: value, alt: post.photo?.alt}}))
-            return;
-        }
-        if ('alt' === name) {
-            setPost((prevState) => ({...prevState, photo: {url: post.photo?.url, alt: value}}))
-            return;
-        }
-        setPost((prevState) => ({...prevState, [name]: value}))
+        // change({name, value})
+        // dispatch({type: 'POST_EDIT_CHANGE', payload: {name, value}})
+        dispatch(editChange(name, value));
     }
 
     return (
@@ -87,21 +33,21 @@ function PostForm({edited = empty, onSave, onCancel}) {
             <textarea ref={firstFocusEL}
                       name="content"
                       placeholder="content"
-                      value={post.content || ''}
+                      value={edited.content || ''}
                       onChange={handleChange}/>
             <input name="tags"
                    placeholder="tags"
-                   value={post.tags?.join(' ') || ''}
+                   value={edited.tags?.join(' ') || ''}
                    onChange={handleChange}/>
             <input name="photo"
                    placeholder="photo"
-                   value={post.photo?.url || ''}
+                   value={edited.photo?.url || ''}
                    onChange={handleChange}/>
             <input name="alt"
                    placeholder="alt"
-                   value={post.photo?.alt || ''}
+                   value={edited.photo?.alt || ''}
                    onChange={handleChange}/>
-            {!!post.id && <button name="Отменить" onClick={handleCancel} value="Отменить">Отменить</button>}
+            {!!edited.id && <button name="Отменить" onClick={handleCancel} value="Отменить">Отменить</button>}
             <button>Ok</button>
         </form>
     );

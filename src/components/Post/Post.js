@@ -1,24 +1,37 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import './Post.css'
 import Tags from "../Tags/Tags";
+import PostsContext from "../../contexts/PostsContext";
+import {edit, hide, like, remove} from "../../store/actions";
 
-function Post({post, onLike, onRemove, onHide, onEdit}) {
+function Post({post}) {
     const {author} = post;
     const {photo} = post;
 
-    const handleClick = (evt) => {
-        onLike(post.id)
+    const {dispatch} = useContext(PostsContext);
+
+    const handlePostLike = () => {
+        // like(post.id)
+        // dispatch({type: 'POST_LIKE', payload: {id: post.id}})
+        dispatch(like(post.id));
     }
 
-    const handleRemoveClick = (evt) => {
-        onRemove(post.id)
+    const handlePostRemove = () => {
+        // remove(post.id)
+        // dispatch({type: 'POST_REMOVE', payload: {id: post.id}})
+        dispatch(remove(post.id));
     }
 
-    const handleHide = (evt) => {
-        onHide(post.id)
+    const handleTogglePostVisibility = () => {
+        // toggleVisibility(post.id)
+        // dispatch({type: 'POST_HIDE', payload: {id: post.id}})
+        dispatch(hide(post.id));
     }
-    const handleEdit = () => {
-        onEdit(post.id)
+
+    const handlePostEdit = () => {
+        // edit(post.id)
+        // dispatch({type: 'POST_EDIT', payload: {id: post.id}})
+        dispatch(edit(post.id));
     }
 
     return (
@@ -26,9 +39,9 @@ function Post({post, onLike, onRemove, onHide, onEdit}) {
             <header>
                 <img src={author.avatar} className="Post-avatar" width="50" height="50" alt={author.name}/>
                 <h5>{author.name}</h5>
-                <button onClick={handleHide}>{post.hidden ? 'скрыть' : 'показать'}</button>
-                {post.hidden && <button onClick={handleRemoveClick}>удалить</button>}
-                {post.hidden && <button onClick={handleEdit}>изменить</button>}
+                <button onClick={handleTogglePostVisibility}>{post.hidden ? 'скрыть' : 'показать'}</button>
+                {post.hidden && <button onClick={handlePostRemove}>удалить</button>}
+                {post.hidden && <button onClick={handlePostEdit}>изменить</button>}
                 {post.hidden && <div>{post.created}</div>}
                 {post.hidden && post.hit && <span>HIT</span>}
             </header>
@@ -37,7 +50,7 @@ function Post({post, onLike, onRemove, onHide, onEdit}) {
                 {photo && <img src={photo.url} alt={photo.alt} className="Post-photo"/>}
             </div>}
             {post.hidden && <footer>
-                <span className="Post-likes" onClick={handleClick}>
+                <span className="Post-likes" onClick={handlePostLike}>
                     <img src={post.likedByMe ? "https://lms.openjs.io/liked.svg" : "https://lms.openjs.io/unliked.svg"}
                          width="20" height="20" alt='likes'/>
                     <span className="Post-likes-count">{post.likes}</span>
